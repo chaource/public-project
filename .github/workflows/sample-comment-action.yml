@@ -1,0 +1,53 @@
+name: Dispatches another action on comment containing a specific keyword
+
+on:
+  issue_comment:
+    types:
+      - created
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  trigger-dispatch:
+    name: Dispatch action from other repo
+    if: |
+      github.event.issue.pull_request && github.event.comment.body == '/dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get PR SHA
+        id: sha
+        uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            return pr.data.head.sha
+      - name: Trigger dispatch
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BUILDER_ACCESS_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: "chaource",
+              repo: "private-builder",
+              workflow_id: "build.yml",
+              ref: "main",
+              inputs: {
+                sha: "${{steps.sha.outputs.result}}",
+                target: "staging",
+              }
+            });
+      - name: Create comment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `\`${{steps.sha.outputs.result}}\` has been dispatched.`,
+            });
