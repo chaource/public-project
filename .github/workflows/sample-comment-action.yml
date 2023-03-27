@@ -34,7 +34,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: "chaource",
               repo: "private-builder",
-              workflow_id: "build.yml",
+              workflow_id: "builder.yml",
               ref: "main",
               inputs: {
                 sha: "${{steps.sha.outputs.result}}",
