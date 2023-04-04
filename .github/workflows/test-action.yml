@@ -1,0 +1,19 @@
+name: Test comment
+
+on:
+  issue_comment:
+    types:
+      - created
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  start-action:
+    name: Start
+    if: |
+      github.event.issue.pull_request && github.event.comment.body == '/start'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: sha
+        run: echo "$(git rev-parse --short HEAD)"
