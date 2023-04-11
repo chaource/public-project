@@ -1,23 +1,26 @@
 name: Test
-permissions: read-all
 
 on:
-  pull_request_target:
-    branches:
-      - main
+  issue_comment:
+    types: [created, edited]
 
 jobs:
   lint:
     name: Run Lint
     runs-on: ubuntu-latest
     environment: build
+    if: |
+      github.event.issue.pull_request && github.event.comment.body == '/lint'
     steps:
+      - uses: LeeJim/pull-request-comment-branch@main
+        id: comment-branch
       - uses: actions/checkout@v3
+        if: success()
         with:
-          ref: "refs/pull/${{ github.event.number }}/merge"
-
+          ref: ${{ steps.comment-branch.outputs.head_ref }}
+          repository: ${{ steps.comment-branch.outputs.head_repo_name_with_owner }}
       - uses: actions/setup-node@v2
         with:
           node-version: 12.x
-      - run: yarn install --frozen-lockfile
-      - run: yarn lint:check
+      - run: npm run build
+        shell: bash
