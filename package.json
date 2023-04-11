@@ -1,0 +1,11 @@
+{
+  "name": "public-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github-roublardise:roublardise/public-project.git",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "build": "echo 'foo'"
+  }
+}
